@@ -47,6 +47,7 @@ yarn run start
 
 **Package Windows: <sup>*1*</sup>**
 ```bash
+set NODE_OPTIONS=--openssl-legacy-provider
 yarn run build:package:windows
 ```
 

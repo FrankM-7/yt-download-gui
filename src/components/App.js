@@ -55,7 +55,7 @@ function App() {
             {searchResults.map((result, index) => (
               <div key={index} style={{ border: '1px red solid', height: "150px", display: 'flex' }}>
                 {/* Display your result data */}
-                <div style={{ border: '1px blue solid', width: '160px' }}>
+                <div style={{ border: '1px blue solid', width: '160px', display: 'flex', justifyContent: 'center' }}>
                   <img src={result.thumbnail} alt={result.title} style={{ width: '100%', height: '90px' }} />
                 </div>
                 <div style={{ border: '1px green solid', marginLeft: '10px' }}>
