@@ -50,27 +50,31 @@ function App() {
         />
         <button onClick={handleSearch}>Search</button>
         {searchResults.length > 0 ? (
-          <div style={{ height: '500px', overflowY: 'auto', border: '1px solid gray' }}>
+          <div style={{ height: '500px', overflowY: 'auto' }}>
             {/* Render your results here */}
             {searchResults.map((result, index) => (
-              <div key={index} style={{ border: '1px red solid', height: "150px", display: 'flex' }}>
+              <div key={index} style={{ height: "144px", display: 'flex', marginBottom: '15px', border: '1px black solid'}}>
                 {/* Display your result data */}
-                <div style={{ border: '1px blue solid', width: '160px', display: 'flex', justifyContent: 'center' }}>
-                  <img src={result.thumbnail} alt={result.title} style={{ width: '100%', height: '90px' }} />
+                <div style={{ width: '256px' }}>
+                  <img src={result.thumbnail} alt={result.title} style={{ width: '256px', height: '100%' }} />
                 </div>
-                <div style={{ border: '1px green solid', marginLeft: '10px' }}>
-                  <h3>{result.title}</h3>
-                  <div style={{display: 'flex' }}>
-                    <div style={{display: 'flex' }}>
-                      <p>Duration: </p>
-                      {result.duration}
-                    </div>
-                    <div style={{marginLeft: '10px', display: 'flex'}}>
-                      <p>Download: </p>
-                      <button onClick={download.bind(this, result.link)}>Download</button>
+                <div style={{ marginLeft: '10px', width: '100%', display: 'flex', flexDirection: 'column', height: '100%' }}>
+                  <div style={{ width: '100%' }}>
+                    {result.title}
+                  </div>
+                  <div style={{ flexGrow: 1 }}></div> {/* This div takes up the remaining space */}
+                  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        Duration:
+                        {result.duration}
+                      </div>
+                      <div style={{ display: 'flex', alignItems: 'center' }}>
+                        <p>Download: </p>
+                        <button style={{height: "100%"}} onClick={download.bind(this, result.link)}>Download</button>
+                      </div>
                     </div>
                   </div>
-                </div>
+
               </div>
 
             ))}

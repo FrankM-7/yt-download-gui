@@ -45,7 +45,7 @@ def search():
 
   # init VideosSearch object
   ydl_opts = {}
-  videosSearch = VideosSearch(query, limit = 2)
+  videosSearch = VideosSearch(query, limit = 10)
   results = videosSearch.result()["result"]
   # build the url
   youtube_link = "https://www.youtube.com/watch?v="
@@ -61,43 +61,33 @@ def search():
       newResult["duration"] = result["duration"]
 
       output_json["results"].append(newResult)
-      continue
-
-      with youtube_dl.YoutubeDL(ydl_opts) as ydl:
-          meta = ydl.extract_info(newlink, download=False)
-          formats = meta.get('formats', [meta])
-          print(result["title"])
-          for format in formats:
-              try:
-                  # audio channels == 2 means theres audio, video_ext != none means theres video
-                  if (format['audio_channels'] == 2 and format['video_ext'] != 'none'):
-                      print(format['url'])
-                      newResult["videos"].append(format['url'])
-                      # print(format['width'], format['height'])
-                      # print(format['tbr'])
-                      # print()
-              except:
-                  continue
-
-      output_json["results"].append(newResult)
+      
   response = jsonify(output_json)
   response.headers.add('Access-Control-Allow-Origin', '*')
   return response
 
+def my_hook(d):
+  if d['status'] == 'downloading':
+    percent = round(float(d['downloaded_bytes'])/float(d['total_bytes'])*100,1)
+    # print ("downloading "+ str(round(float(d['downloaded_bytes'])/float(d['total_bytes'])*100,1))+"%")
+  if d['status'] == 'finished':
+    filename=d['filename']
+    print(filename)
 
 @app.route("/download", methods=["GET"])
 def download():
   link = request.args.get("url")
   # output to desktop
   # get user desktop path
-  desktop = os.path.join(os.path.join(os.environ['USERPROFILE']), 'Desktop')
-  ydl_opts = {
-    'outtmpl': desktop + '/Musica' +  '/%(title)s.%(ext)s',
-  }
+  # desktop = os.path.join(os.path.join(os.environ['USERPROFILE']), 'Desktop')
+  # ydl_opts = {
+  #   'outtmpl': desktop + '/Musica' +  '/%(title)s.%(ext)s',
+  # }
 
   # uncomment this for Mac developing and comment the above code desktop and ydl_opts
-  # ydl_opts = {
-  # }
+  ydl_opts = {
+    'progress_hooks': [my_hook]
+  }
   with youtube_dl.YoutubeDL(ydl_opts) as ydl:
     ydl.download([link])
   response = jsonify("Downloaded")
