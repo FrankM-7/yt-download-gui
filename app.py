@@ -5,6 +5,7 @@ import yt_dlp as youtube_dl
 from youtubesearchpython import VideosSearch
 import os
 
+MAC = False
 app = Flask(__name__)
 app_config = {"host": "0.0.0.0", "port": sys.argv[1]}
 
@@ -44,7 +45,6 @@ def search():
   output_json["results"] = []
 
   # init VideosSearch object
-  ydl_opts = {}
   videosSearch = VideosSearch(query, limit = 10)
   results = videosSearch.result()["result"]
   # build the url
@@ -66,28 +66,20 @@ def search():
   response.headers.add('Access-Control-Allow-Origin', '*')
   return response
 
-def my_hook(d):
-  if d['status'] == 'downloading':
-    percent = round(float(d['downloaded_bytes'])/float(d['total_bytes'])*100,1)
-    # print ("downloading "+ str(round(float(d['downloaded_bytes'])/float(d['total_bytes'])*100,1))+"%")
-  if d['status'] == 'finished':
-    filename=d['filename']
-    print(filename)
-
 @app.route("/download", methods=["GET"])
 def download():
   link = request.args.get("url")
   # output to desktop
   # get user desktop path
-  # desktop = os.path.join(os.path.join(os.environ['USERPROFILE']), 'Desktop')
-  # ydl_opts = {
-  #   'outtmpl': desktop + '/Musica' +  '/%(title)s.%(ext)s',
-  # }
-
-  # uncomment this for Mac developing and comment the above code desktop and ydl_opts
+  desktop = os.path.join(os.path.join(os.environ['USERPROFILE']), 'Desktop')
   ydl_opts = {
-    'progress_hooks': [my_hook]
+    'outtmpl': desktop + '/Musica' +  '/%(title)s.%(ext)s',
   }
+
+  if MAC:
+    ydl_opts = {
+      'outtmpl': desktop + '/Musica' +  '/%(title)s.%(ext)s',
+    }
   with youtube_dl.YoutubeDL(ydl_opts) as ydl:
     ydl.download([link])
   response = jsonify("Downloaded")
@@ -99,9 +91,10 @@ def download():
 # Quits Flask on Electron exit
 @app.route("/quit")
 def quit():
+  if not MAC:
+    os.system("taskkill /f /t /im app.exe")
   shutdown = request.environ.get("werkzeug.server.shutdown")
   shutdown()
-
   return
 
 
