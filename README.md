@@ -46,6 +46,7 @@ yarn run start
 ```
 
 **Package Windows: <sup>*1*</sup>**
+need to add pyinstaller into env variables, %appdata% Roaming Python...Scripts
 ```bash
 set NODE_OPTIONS=--openssl-legacy-provider
 yarn run build:package:windows
