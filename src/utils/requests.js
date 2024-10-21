@@ -40,8 +40,8 @@ export const post = (
 ) => {
   fetch(`http://localhost:${port}/${route}`, {
     body,
-    method: 'POST',
-    headers: { 'Content-type': 'application/json' }
+    headers: { 'Content-type': 'application/json' },
+    method: 'POST'
   })
     .then((response) => response.json())
     .then(callback)
