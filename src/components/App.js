@@ -11,8 +11,7 @@ function App() {
     get(
       'search?query=' + searchQuery, // Route
       (response) => {
-        console.log(response["results"]);
-        setSearchResults(response["results"]);
+        setSearchResults(response.results);
       }, // Response callback
       (error) => console.error(error) // Error callback
     );
@@ -48,32 +47,32 @@ function App() {
           onChange={(e) => setSearchQuery(e.target.value)}
           onKeyPress={handleKeyPress}
         />
-        <button onClick={handleSearch}>Search</button>
+        <button type="button" onClick={handleSearch}>Search</button>
         {searchResults.length > 0 ? (
           <div style={{ height: '500px', overflowY: 'auto' }}>
             {/* Render your results here */}
             {searchResults.map((result, index) => (
-              <div key={index} style={{ height: "144px", display: 'flex', marginBottom: '15px', border: '1px black solid'}}>
+              <div key={index} style={{ border: '1px black solid', display: 'flex', height: "144px", marginBottom: '15px'}}>
                 {/* Display your result data */}
                 <div style={{ width: '256px' }}>
-                  <img src={result.thumbnail} alt={result.title} style={{ width: '256px', height: '100%' }} />
+                  <img src={result.thumbnail} alt={result.title} style={{ height: '100%', width: '256px' }} />
                 </div>
-                <div style={{ marginLeft: '10px', width: '100%', display: 'flex', flexDirection: 'column', height: '100%' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', height: '100%', marginLeft: '10px', width: '100%' }}>
                   <div style={{ width: '100%' }}>
                     {result.title}
                   </div>
-                  <div style={{ flexGrow: 1 }}></div> {/* This div takes up the remaining space */}
+                  <div style={{ flexGrow: 1 }} /> {/* This div takes up the remaining space */}
                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <div style={{ alignItems: 'center', display: 'flex', justifyContent: 'center' }}>
                         Duration:
                         {result.duration}
                       </div>
-                      <div style={{ display: 'flex', alignItems: 'center' }}>
+                      <div style={{ alignItems: 'center', display: 'flex' }}>
                         <p>Download: </p>
-                        <button style={{height: "100%"}} onClick={download.bind(this, result.link)}>Download</button>
+                        <button type="button" style={{height: "100%"}} onClick={download.bind(this, result.link)}>Download</button>
                       </div>
-                    </div>
                   </div>
+                </div>
 
               </div>
 
